@@ -1,10 +1,7 @@
 #!/bin/sh      
 
 echo "Masukan Username VPS: "                                                                                                                                                                     
-read USERNAME
-
-echo "Masukan Email Mu: "
-read EMAIL                                                                                                                                
+read USERNAME                                                                                                                                
                                                                                                                                                                      
 if id "$USERNAME" &>/dev/null; then                                                                                                                                  
     echo "User $USERNAME found."                                                                                                                                     
@@ -43,30 +40,3 @@ sudo apk add nano
 
 echo "Installing nodejs and npm..."
 sudo apk add --no-cache nodejs npm
-
-echo "installing python3, pip"
-sudo apk add --no-cache python3 py3-pip
-
-if [ -z "$EMAIL" ]; then
-    echo "Email belum diatur. Silakan atur variabel EMAIL dengan email GitHub Anda."
-    exit 1
-fi
-
-echo "Generating SSH key pair..."
-ssh-keygen -t rsa -b 4096 -C "$EMAIL"
-
-echo "Masukkan alamat workdir SSH: "
-read workdirssh
-
-# Menyalin kunci publik ke clipboard (gunakan xclip untuk Alpine Linux)
-cat $workdirssh/.ssh/id_rsa.pub | xclip -selection clipboard
-
-if ! command -v ssh &>/dev/null; then
-    echo "Installing openssh..."
-    apk update
-    apk add openssh
-else
-    echo "Openssh sudah terinstal."
-fi
-
-echo "Setup SSH completed."
